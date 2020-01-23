@@ -1,0 +1,59 @@
+-- Questão 8
+select tm.telefone
+from telefonemedico tm natural join medico m
+where m.nome='João'
+
+-- Questão 9
+select a.data, p.nome, m.nome
+from atendimento a, paciente p, medico m 
+where a.codpaciente = p.codpaciente and a.crm = m.crm
+order by m.nome, p.nome
+
+-- Questão 10
+select *
+from atendimento a natural join medico m
+where atendanterior is null and a.crm=m.crm and m.nome='Sérgio'
+
+-- Questão 11
+select p.nome
+from atendimento a, medico m, paciente p
+where a.crm = m.crm and a.codpaciente = p.codpaciente and atendanterior is null and m.nome='João'
+
+-- Questão 12
+select distinct p.nome
+from atendimento a, medico m, paciente p
+where a.crm = m.crm and a.codpaciente = p.codpaciente and m.nome='Ana'
+
+-- Questão 13
+(select p.nome
+from atendimento a, medico m, paciente p
+where a.crm = m.crm and a.codpaciente = p.codpaciente and m.nome = 'Ana')
+intersect
+(select p.nome
+from atendimento a, medico m, paciente p
+where a.crm = m.crm and a.codpaciente = p.codpaciente and m.nome = 'João')
+
+-- Questão 14
+select nome
+from paciente
+where nome like'M%'
+
+-- Questão 15
+select nome, count(*) as Atendimentos
+from atendimento a natural join medico m
+group by crm, nome
+
+-- Questão 16
+select nome
+from atendimento a natural join medico m
+group by crm, nome
+having count(*)>1
+
+-- Questão 17
+select avg(a.valor)
+from setormedico sm, setor s, medico m, atendimento a
+where sm.codsetor=s.codsetor and sm.crm=m.crm and  a.crm = m.crm and a.atendanterior is null
+group by sm.codsetor
+having sm.codsetor=1
+
+--Questão 18
