@@ -56,4 +56,91 @@ where sm.codsetor=s.codsetor and sm.crm=m.crm and  a.crm = m.crm and a.atendante
 group by sm.codsetor
 having sm.codsetor=1
 
---Questão 18
+-- Questão 18
+(select nome
+from medico)
+except
+(select m.nome
+from atendimento a, medico m
+where a.crm=m.crm and a.tipo='Unimed')
+
+-- Questão 19
+select m.nome, count(*) as consultasparticulares
+from medico m, atendimento a
+where a.crm=m.crm and a.tipo='Particular' and a.atendanterior is null
+group by m.crm, m.nome
+
+-- Questão 20
+select data, count(*) as atendimentos, sum(valor) as apuração
+from atendimento a
+group by data
+order by data desc
+
+-- Questão 21
+select m.nome
+from telefonemedico tf, medico m
+where tf.crm=m.crm
+group by m.crm, m.nome
+having count(*)>2
+
+-- Questão 22
+select s.nome
+from setormedico sm, setor s
+where sm.codsetor=s.codsetor
+group by s.codsetor, s.nome
+having count(*)<2
+
+-- Questão 23
+create view atendmedicos
+as select crm, nome, count(*) as atendimentos
+from medico m natural join atendimento a
+group by crm, nome
+
+-- Questão 24
+select crm, nome
+from atendmedicos
+order by atendimentos desc
+
+-- Questão 25
+create view setores as
+select s.codsetor, s.nome, m.nome as supervisor, count(*) as alocados
+from setor s, medico m, setormedico as sm
+where s.supervisor=m.crm and sm.codsetor=s.codsetor
+group by s.codsetor, s.nome, m.nome
+
+-- Questão 26
+select codsetor, nome, supervisor
+from setores
+where alocados>1
+
+-- Questão 27
+create view atendimentodetalhado as
+select a.data, m.crm, m.nome as medico, p.codpaciente, p.nome as paciente, a.tipo
+from atendimento a, medico m, paciente p
+where a.crm=m.crm and a.codpaciente=p.codpaciente
+
+-- Questão 28
+select codpaciente, paciente, tipo
+from atendimentodetalhado
+where crm='1111-1'
+
+-- Questão 29
+update atendimento
+set tipo='UnimedVida'
+where tipo='Unimed'
+
+-- Questão 30
+update setor
+set supervisor='1111-3'
+where nome='Neurologia'
+
+-- Questão 31
+delete from atendimento
+where crm='1111-1'
+
+-- Questão 32
+delete from telefonemedico
+
+-- Questão 33
+create index medicoIndice on medico(nome)
+
